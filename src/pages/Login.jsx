@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Navigate } from 'react-router-dom';
 
 export default function Login() {
-    const { login, signup, user } = useAuth();
+    const { login, signup, user, isMockMode, toggleMockMode } = useAuth();
     const navigate = useNavigate();
     
     const [isRegistering, setIsRegistering] = useState(false);
@@ -65,6 +65,64 @@ export default function Login() {
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>
                         {isRegistering ? 'Únete para guardar tus paraderos favoritos' : 'Ingresa a tu cuenta para ver tus viajes y saldo'}
                     </p>
+                </div>
+
+                {/* Selector de Modo (Supabase vs Simulación) */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid var(--color-glass-border)',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    marginBottom: '20px'
+                }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'white' }}>
+                            {isMockMode ? '🔌 Modo Simulación (Offline)' : '🌐 Conexión Supabase'}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+                            {isMockMode ? 'Usando base de datos local' : 'Usando servidor Supabase real'}
+                        </span>
+                    </div>
+                    <label className="switch" style={{
+                        position: 'relative',
+                        display: 'inline-block',
+                        width: '46px',
+                        height: '24px'
+                    }}>
+                        <input
+                            type="checkbox"
+                            checked={isMockMode}
+                            onChange={(e) => toggleMockMode(e.target.checked)}
+                            style={{ opacity: 0, width: 0, height: 0 }}
+                        />
+                        <span className="slider" style={{
+                            position: 'absolute',
+                            cursor: 'pointer',
+                            top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            transition: '.3s',
+                            borderRadius: '24px',
+                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.5)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}>
+                            <span style={{
+                                height: '16px',
+                                width: '16px',
+                                left: isMockMode ? '24px' : '4px',
+                                bottom: '3px',
+                                backgroundColor: isMockMode ? 'var(--color-primary)' : 'rgba(255,255,255,0.5)',
+                                transition: '.3s',
+                                borderRadius: '50%',
+                                position: 'absolute',
+                                boxShadow: isMockMode ? '0 0 10px var(--color-primary)' : 'none'
+                            }} />
+                        </span>
+                    </label>
                 </div>
 
                 <AnimatePresence>
@@ -149,7 +207,13 @@ export default function Login() {
                 {!isRegistering && (
                     <div style={{ textAlign: 'center', marginTop: '15px', fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>
                         Para pruebas de Admin: admin@movicerri.cl / admin<br/>
-                        (Requiere que esa cuenta exista en tu base de datos de Supabase)
+                        {isMockMode ? (
+                            <span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>
+                                (¡Listo para usar en Modo Simulación!)
+                            </span>
+                        ) : (
+                            <span>(Requiere que esa cuenta exista en tu base de datos de Supabase)</span>
+                        )}
                     </div>
                 )}
             </motion.div>
