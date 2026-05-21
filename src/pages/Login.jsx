@@ -27,18 +27,32 @@ export default function Login() {
 
         try {
             if (isRegistering) {
-                await signup(email, password, nombre);
-                // Si el signUp es exitoso, Supabase loguea al usuario automáticamente (dependiendo de la config de confirmación de email)
+                const registeredUser = await signup(email, password, nombre);
+                // Si el signUp es exitoso pero la confirmación por correo está activada,
+                // no habrá sesión activa (el usuario es null). Cambiamos a modo login.
+                if (registeredUser) {
+                    setIsRegistering(false);
+                    setPassword('');
+                }
             } else {
                 await login(email, password);
                 navigate('/sesion');
             }
         } catch (err) {
             let msg = err.message;
-            if (msg.includes('Invalid login credentials')) msg = 'Correo o contraseña incorrectos.';
-            if (msg.includes('User already registered')) msg = 'Este correo ya tiene una cuenta registrada.';
-            if (msg.includes('Password should be at least')) msg = 'La contraseña debe tener al menos 6 caracteres.';
-            if (msg.includes('missing_credentials')) msg = 'Faltan credenciales en la configuración (Revisa el archivo .env).';
+            if (msg.includes('Invalid login credentials')) {
+                msg = 'Correo o contraseña incorrectos.';
+            } else if (msg.includes('User already registered')) {
+                msg = 'Este correo ya tiene una cuenta registrada.';
+            } else if (msg.includes('Password should be at least')) {
+                msg = 'La contraseña debe tener al menos 6 caracteres.';
+            } else if (msg.includes('missing_credentials')) {
+                msg = 'Faltan credenciales en la configuración (Revisa el archivo .env).';
+            } else if (msg.includes('email rate limit exceeded') || msg.includes('over_email_send_rate_limit')) {
+                msg = 'Se ha excedido el límite de envío de correos de Supabase. Te recomendamos desactivar "Confirm email" (Confirmar correo) en el panel de Supabase (Authentication -> Providers -> Email).';
+            } else if (msg.includes('Email not confirmed') || msg.includes('email_not_confirmed')) {
+                msg = 'Debes confirmar tu correo electrónico antes de iniciar sesión, o desactiva "Confirm email" en tu panel de Supabase.';
+            }
             setError(msg);
         } finally {
             setIsLoading(false);
