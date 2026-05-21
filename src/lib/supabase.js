@@ -1,7 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
+
+const supabaseUrl = rawUrl.trim().replace(/^['"]|['"]$/g, '');
+const supabaseAnonKey = rawKey.trim().replace(/^['"]|['"]$/g, '');
 
 // Verificamos que las variables de entorno existan
 console.log('Supabase URL:', supabaseUrl);
