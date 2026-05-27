@@ -14,7 +14,7 @@ export default function Navbar() {
     const isHome = location.pathname === '/';
 
     return (
-        <nav id="navbar" style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <nav id="navbar">
             <div className="logo" style={{ zIndex: 10 }}>
                 <Link to="/" onClick={handleLinkClick} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', color: 'white', gap: '10px' }}>
                     <div style={{ background: 'var(--color-primary)', width: '35px', height: '35px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px rgba(255,69,0,0.5)' }}>
@@ -28,7 +28,7 @@ export default function Navbar() {
                 {navActive ? <X size={28} /> : <Menu size={28} />}
             </div>
             
-            <ul id="navMenu" className={navActive ? 'nav-active' : ''} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <ul id="navMenu" className={navActive ? 'nav-active' : ''}>
                 {isHome ? (
                     <>
                         <li><a href="#top" onClick={handleLinkClick}>INICIO</a></li>
