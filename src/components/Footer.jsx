@@ -5,7 +5,7 @@ export default function Footer() {
         <footer>
             <div className="footer-grid">
                 <div className="footer-col">
-                    <h4><img src="/images.png" alt="Logo" style={{ height: '24px', verticalAlign: 'middle' }} /> MOVICERRI</h4>
+                    <h4><img src="/favicon.png" alt="Logo" style={{ height: '24px', verticalAlign: 'middle' }} /> MOVICERRI</h4>
                     <p>Solución inteligente para el transporte público de Cerrillos. Proyecto estudiantil que utiliza IA para mejorar la movilidad urbana.</p>
                 </div>
                 <div className="footer-col">
